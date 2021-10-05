@@ -69,13 +69,13 @@ class _GameState extends State<Game> {
       spawnBomb(x,y,r);
     }
   }
-  bombExplodes(Bomb bomb){
+  bombExplodes(Bomb bomb, double y){
     setState(() {
       list.remove(bomb);
-      if (bomb.y < this.separatorLine!){
+      if (y < this.separatorLine!){
         this.separatorLine = separatorLine! + 50;
       }
-      if (bomb.y > this.separatorLine!){
+      if (y > this.separatorLine!){
         separatorLine = separatorLine! - 50;
       }
     });

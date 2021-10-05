@@ -85,9 +85,8 @@ class _BombState extends State<Bomb> {
     setState(() {
       this.boom = true;
       timer?.cancel();
-
       Future.delayed(Duration(milliseconds: 100), () {
-        this.bombExplodes(widget);
+        this.bombExplodes(widget, this.y);
       });
     });
   }
