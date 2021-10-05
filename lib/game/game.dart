@@ -17,13 +17,12 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> {
-
   var rnd1 = Random();
   var rk = Random();
   var size = MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size;
   double? separatorLine;
   // bool gameIsGoing = true;
-  List list = [];
+  List<Bomb> list = [];
   bool boom = false;
   bool vision = false;
   Timer ?timer;
@@ -32,14 +31,11 @@ class _GameState extends State<Game> {
     timer = Timer.periodic(Duration(seconds: 5), (timer) {generation(); });
   }
   generation(){
-   // print(gameIsGoing);
     var r = rnd1.nextInt(4);
     if (r == 0) {
       //нижняя часть экрана
       var x = (size.width) * rk.nextDouble();
       var y = size.height - 50;
-      print(x);
-      print(y);
       if (x<size.width/2){
         r=4;
       }
@@ -49,8 +45,6 @@ class _GameState extends State<Game> {
       //левая часть экрана
       var x = 0;
       var y = (size.height) * rk.nextDouble();
-      print(x);
-      print(y);
       if (y < size.height/2){
         r=5;
       }
@@ -60,8 +54,6 @@ class _GameState extends State<Game> {
       //верхняя часть экрана
       var x = (size.width) * rk.nextDouble();
       var y = 0;
-      print(x);
-      print(y);
        if (x<size.width){
          r=6;
        }
@@ -71,25 +63,21 @@ class _GameState extends State<Game> {
       //правая часть экрана
       var x = size.width - 50;
       var y = (size.height) * rk.nextDouble();
-      print(x);
-      print(y);
       if(y<size.height/2){
         r=7;
       }
       spawnBomb(x,y,r);
     }
-    print(r);
   }
   bombExplodes(Bomb bomb){
     setState(() {
-
+      list.remove(bomb);
       if (bomb.y < this.separatorLine!){
         this.separatorLine = separatorLine! + 50;
       }
       if (bomb.y > this.separatorLine!){
         separatorLine = separatorLine! - 50;
       }
-      list.remove(bomb);
     });
   }
 
@@ -97,7 +85,6 @@ class _GameState extends State<Game> {
     setState(() {
       list.add(Bomb(x: x, y: y,point: point,bombExplodes: bombExplodes));
     });
-
   }
 
   // setPositioned(){
@@ -114,7 +101,6 @@ class _GameState extends State<Game> {
       this.separatorLine = fullSize.height / 2;
     }
 
-    print(fullSize);
     List<Widget> children = [
       GestureDetector(
         onTapDown: _onUserClickFunction(context),
@@ -123,8 +109,8 @@ class _GameState extends State<Game> {
           height: fullSize.height,
           child: CustomPaint(
             painter: ButtonsPainter(this.separatorLine),
-          ),
-        ),
+          )
+        )
       )
     ];
     for (var i = 0; i < list.length; i++) {
@@ -147,8 +133,6 @@ class _GameState extends State<Game> {
             } else if (details.localPosition.dy > this.separatorLine!) {
               this.separatorLine = this.separatorLine! - userClickDy;
             }
-            print(details.globalPosition.dx);
-            print(details.globalPosition.dy);
 
             if (this.separatorLine! <= 0) {
 
