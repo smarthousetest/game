@@ -26,11 +26,15 @@ class _GameState extends State<Game> {
   bool boom = false;
   bool vision = false;
   Timer ?timer;
+  bool isOffScreen = false;
+   Bomb bomb = Bomb(x:0, y:0, point:0, bombExplodes:0);
   //var point;
   _GameState() {
     timer = Timer.periodic(Duration(seconds: 5), (timer) {generation(); });
+
   }
   generation(){
+
     var r = rnd1.nextInt(4);
     if (r == 0) {
       //нижняя часть экрана
@@ -68,17 +72,27 @@ class _GameState extends State<Game> {
       }
       spawnBomb(x,y,r);
     }
+
+    print(isOffScreen);
   }
   bombExplodes(Bomb bomb, double y){
     setState(() {
       list.remove(bomb);
-      if (y < this.separatorLine!){
+      if (y > this.separatorLine!) {
         this.separatorLine = separatorLine! + 50;
       }
-      if (y > this.separatorLine!){
+      if (y < this.separatorLine!) {
         separatorLine = separatorLine! - 50;
       }
-    });
+    }
+    );
+  }
+  // ne branc
+  destroyBomb(Bomb bomb, double y, double x){
+   if (y > size.height || x > size.width){
+     isOffScreen = true;
+     print(isOffScreen);
+   }
   }
 
   spawnBomb(x,y,point) {
